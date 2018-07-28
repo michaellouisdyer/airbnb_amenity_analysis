@@ -16,3 +16,16 @@ Variance inflation factors for bookings:
 | adr                |    1.254e+06   |
 | revenue            |    5.608e+06   |
 | revenue_native     |    5.608e+06   |
+
+
+Data imputation MSE:
+|   Imputation Method  |    MSE         |
+|:---------------------|---------------:|
+| SimpleFill (mean)    | 2050.91        |
+| 1KNN                 | 3942.8         |
+| 2KNN                 | 2963.37        |
+| 3KNN                 | 2592.96        |
+| 4KNN                 | 2432.66        |
+| 5KNN                 | 2332.15        |
+| IterativeSVD        |    2.11556e+06 |
+| MatrixFactorization | 2104.69        |
