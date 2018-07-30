@@ -27,16 +27,21 @@ def get_unique_amenities(prop):
     return flt.unique()
 
 # def main():
-def get_data():
+def get_data(id =  False):
     bookings = pd.read_csv('../data/denver_booking_data.csv')
     prop = pd.read_csv('../data/denver_properties.csv')
 
-    prop['clean_rate'] =  prop['cleaning_fee'] / (prop['price_nightly']  +prop['cleaning_fee'])
-    plt.scatter(prop['accommodates'], prop['clean_rate'])
-    amenities =  get_unique_amenities(prop)
+    # prop['clean_rate'] =  prop['cleaning_fee'] / (prop['price_nightly']  +prop['cleaning_fee'])
+    # plt.scatter(prop['accommodates'], prop['clean_rate'])
+    # amenities =  get_unique_amenities(prop)
     # pd.to_pickle(amenities, 'amenities.pkl')
+    prop['neighborhood'] = prop['neighborhood'].str.replace(' ','_').str.lower()
+    if id:
+        w_id = prop[['airbnb_property_id', 'c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
+        return w_id.fillna(w_id.mean())
+
+
     amenity_df  = prop[['c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
-    amenity_df['neighborhood'] = amenity_df['neighborhood'].str.replace(' ','_').str.lower()
     amenity_df = amenity_df.fillna(amenity_df.mean())
     return amenity_df
 
