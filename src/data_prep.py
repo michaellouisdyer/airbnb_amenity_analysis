@@ -10,12 +10,14 @@ import ast
 
 
 def VIFS(df):
-    vif_df = pd.Series()
-    df =  df.select_dtypes(include = [np.number])#.dropna()
+    # vif_df = pd.DataFrame(orient = 'index')
+    vif_dict = {}
+    df =  df.select_dtypes(include = [np.number, 'bool'])#.dropna()
     for i, col in enumerate(df.columns):
-        if df[col].dtype in['float64', 'int64']:
-            vif_df[col] = variance_inflation_factor(df.values, i)
-    return vif_df
+        if df[col].dtype in['float64', 'int64', 'bool']:
+            vif_dict[col] = variance_inflation_factor(df.values.astype('int64'), i)
+            # print(col)
+    return pd.DataFrame.from_dict(vif_dict, orient='index').sort_values(by=0)
 
 def get_unique_amenities(prop):
 
@@ -33,9 +35,9 @@ def get_data():
     plt.scatter(prop['accommodates'], prop['clean_rate'])
     amenities =  get_unique_amenities(prop)
     pd.to_pickle(amenities, 'amenities.pkl')
-    amenity_df  = prop[['c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood','guidebook', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer', 'dryer']]
+    amenity_df  = prop[['c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
     amenity_df['neighborhood'] = amenity_df['neighborhood'].str.replace(' ','_').str.lower()
-    import pdb; pdb.set_trace()
+    amenity_df = amenity_df.fillna(amenity_df.mean())
     return amenity_df
 
 def imputation_method():
@@ -48,7 +50,9 @@ def imputation_method():
 # import pdb; pdb.set_trace()
 # plt.show()
 # vif_df = VIFS(bookings)
-# vif_df = VIFS(properties)
+amenity_df = get_data()
+vif_df = VIFS(amenity_df)
+to_markdown(vif_df)
 # import pdb; pdb.set_trace()
 # main()
 # import pdb; pdb.set_trace()
