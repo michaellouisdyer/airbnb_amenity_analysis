@@ -19,7 +19,7 @@ def get_query(best =  False, id = False):
     property_amenities = []
 
     if id:
-        amenity_df = get_data(id = True)
+        amenity_df = get_data(extra_column = 'airbnb_property_id')
         id_property = amenity_df.query('airbnb_property_id == @id')
         property_amenities = [x for x in id_property.columns[(id_property == True).all()]]
         property_amenities.remove('bedrooms')
