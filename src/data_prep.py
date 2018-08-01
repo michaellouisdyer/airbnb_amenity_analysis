@@ -37,11 +37,11 @@ def get_data(extra_column =  False):
     # pd.to_pickle(amenities, 'amenities.pkl')
     prop['neighborhood'] = prop['neighborhood'].str.replace(' ','_').str.lower()
     if extra_column:
-        w_id = prop[[extra_column, 'c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
+        w_id = prop[[extra_column, 'c_revenue_potential_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
         return w_id.fillna(w_id.mean())
 
 
-    amenity_df  = prop[['c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
+    amenity_df  = prop[['c_revenue_potential_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', 'neighborhood', 'smoking', 'pets_allowed', 'tv', 'internet', 'cabletv', 'wireless', 'aircon', 'heating', 'elevator', 'pool', 'handicap_access', 'kitchen', 'doorman', 'free_parking', 'gym', 'hottub', 'indoor_fireplace', 'intercom', 'breakfast', 'suitable_for_events', 'family_friendly', 'washer']]
     amenity_df = amenity_df.fillna(amenity_df.mean())
     return amenity_df
 

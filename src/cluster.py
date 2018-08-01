@@ -55,18 +55,18 @@ def cluster(query, amenity_df, k =  5, verbose = False, distance_weight = 1):
 
     query_df = pd.DataFrame.from_dict(query, orient = 'index').drop('amenity').T
 
-    df  = amenity_df[['c_revenue_native_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', amenity_x]]
+    df  = amenity_df[['c_revenue_potential_ltm', 'bedrooms', 'bathrooms', 'accommodates', 'latitude', 'longitude', amenity_x]]
     w_amenity = df[df[amenity_x]].drop(columns = [amenity_x])
     w_out_amenity = df[~df[amenity_x]].drop(columns = [amenity_x])
 
 
-    y_w = w_amenity.pop('c_revenue_native_ltm')
+    y_w = w_amenity.pop('c_revenue_potential_ltm')
     w_amenity = w_amenity.append(query_df)
     X_w = scaler.fit_transform(w_amenity)
     X_w[:, 3:] = X_w[:, 3:]*distance_weight
     w_predict =  X_w[-1].reshape(1, -1)
     X_w =  X_w[:-1, :]
-    y_w_out = w_out_amenity.pop('c_revenue_native_ltm')
+    y_w_out = w_out_amenity.pop('c_revenue_potential_ltm')
     w_out_amenity = w_out_amenity.append(query_df)
     X_w_out = scaler.fit_transform(w_out_amenity)
 
@@ -100,7 +100,7 @@ def plot_neighbors(w_out_neighbors_df, w_neighbors_df, query_df, name):
     gmap.draw(filename)
     print("You can view a map of nearby properties by opening " + filename)
 
-def best_amenities(id = None, unique = False):
+def best_amenities(id = None, unique = True):
     amenity_df = get_data()
     query, property_amenities = get_query(best = True, id = id)
     unique_amenities =  list(pd.read_pickle('common_amenities.pkl')[0])

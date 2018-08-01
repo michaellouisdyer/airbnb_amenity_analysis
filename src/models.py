@@ -10,7 +10,8 @@ from sklearn.preprocessing import StandardScaler
 
 def run_regressions(df):
     # amenity_df = amenity_df.query('neighborhood == "cherry_creek"')
-    y = amenity_df.pop('c_revenue_native_ltm')
+    # y = amenity_df.pop('c_revenue_native_ltm')
+    y = amenity_df.pop('c_revenue_potential_ltm')
     # X = amenity_df.drop(columns = ['neighborhood', 'latitude', 'longitude','bedrooms'])
     X = amenity_df.drop(columns = ['neighborhood', 'latitude', 'longitude', 'accommodates', 'bedrooms', 'bathrooms'])
     X['constant'] = 1

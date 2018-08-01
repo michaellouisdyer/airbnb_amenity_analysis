@@ -19,6 +19,7 @@ Variance inflation factors for bookings:
 
 
 Data imputation MSE:
+
 |   Imputation Method  |    MSE         |
 |:---------------------|---------------:|
 | SimpleFill (mean)    | 2050.91        |
@@ -31,6 +32,7 @@ Data imputation MSE:
 | MatrixFactorization | 2104.69        |
 
 Vifs before feature selection (all of Denver)
+
 |                      |         0 |
 |:---------------------|----------:|
 | breakfast            |     1.04  |
@@ -64,6 +66,7 @@ Vifs before feature selection (all of Denver)
 
 
 after:
+
 |                      |         0 |
 |:---------------------|----------:|
 | breakfast            |     1.04  |
@@ -96,6 +99,7 @@ after:
 
 ElasticNet (l1 ratio = 1, epsilon = 0.001)
 R^2 = 0.2618
+
 |                     |         0 |
 |:--------------------|----------:|
 | pool                | -1576.91  |
@@ -127,6 +131,7 @@ None
 
 Standard linear regression:
 0.2590
+
 |                     |         0 |
 |:--------------------|----------:|
 | pool                | -1880.88  |
@@ -160,6 +165,7 @@ Removing bathrooms and accommodates:
 
 ElasticNet (l1 ratio = 1, alpha = 129.33)
 r^2 = 0.1331
+
 |                     |         0 |
 |:--------------------|----------:|
 | pool                | -2936.92  |
@@ -189,6 +195,7 @@ r^2 = 0.1331
 
 standard linear regressions:
 0.1315
+
 |                     |         0 |
 |:--------------------|----------:|
 | pool                | -3278.2   |
@@ -216,6 +223,8 @@ standard linear regressions:
 | family_friendly     |  3778.69  |
 
 
+<img src = "img/amenity_comparison.png" width =1200>
+
 
 ## Clustering:
 To determine the most important features for an area, I created a script that takes the location (in latitude and longitude), bedrooms, bathrooms and # of people accommodated, and uses KNeighbors Regression to predict revenue with and without a particular amenity based on the most similar neighbors. The with-amenity predicition minus the without-amenity prediction is the revenue potential. I evaluated this for the most common amenities and put them in order of most potential.
@@ -230,6 +239,7 @@ Input information mode:
  2. Manual entry
 1
 ID: 6333040
+
 |                     |   revenue_potential |
 |:--------------------|--------------------:|
 | pool                |            -49307   |
@@ -277,6 +287,7 @@ ElasticNet R^2:  0.366
 
  Alpha:  10.210
  l1_ratio: 0.9
+
 |                      |        0 |
 |:---------------------|---------:|
 | minimum_stay         | -778.961 |
@@ -323,8 +334,9 @@ ElasticNet R^2:  0.366
 | img_count            | 2114.96  |
 | reviews_count        | 2658.07  |
 | cleaning_fee         | 2854.74  |
-0.395
+
 Standard Linear R^2:  0.395
+
 |                      |         0 |
 |:---------------------|----------:|
 | price_weekly         | -1931.6   |
@@ -373,6 +385,7 @@ Standard Linear R^2:  0.395
 | cleaning_fee         |  5811.96  |
 
 VIFS before feature selection
+
 |                      |         0 |
 |:---------------------|----------:|
 | business_ready       |     1.045 |
@@ -428,6 +441,7 @@ VIFS before feature selection
 
 
 Further selection
+
 |                     |       0 |
 |:--------------------|--------:|
 | business_ready      |   1.06  |
@@ -468,6 +482,7 @@ Further selection
 | rating_overall      | 119.616 |
 
 Standard Linear R^2:  0.393
+
 |Feature              |   Coef    |
 |:--------------------|----------:|
 | minimum_stay        | -1697.57  |
@@ -505,3 +520,93 @@ Standard Linear R^2:  0.393
 | price_nightly       |  3583.5   |
 | cleaning_fee        |  5751.4   |
 | reviews_count       |  5774.19  |
+
+a simple nlp(NOT TFIDF) / lasso regression on titles in denver showed the top words:
+alpha = 12.489
+r^2 = 0.2999
+5br             20450.273794
+mansion         20646.826391
+firework        23340.979281
+14              24806.870285
+16++            25781.061027
+16              27619.962822
+group           27652.725589
+3800            29184.224593
+estate          29643.396534
+sqft            35624.561128
+dnvr            45114.833138
+mediterranean   61570.619015
+360             67152.592536
+lowell          98599.500803
+6br            101571.661425
+
+(full data in nlp_title.pkl)
+
+R^2 =  0.302
+ Alpha:  41.616
+party        5919.444465
+hot          6045.517071
+☆            6224.443167
+chef         6322.019535
+roof         6518.965178
+4.5          6897.079489
+standard     9123.732080
+group        9586.668762
+manage      11231.895177
+dream       11919.766122
+search      13177.088348
+ping        17707.814759
+reunion     32422.331226
+('description_nontfidfmlp.pkl'
+
+
+
+description LASSO with TFIDF, max_features = 100
+R^2 =  0.155
+ Alpha:  7.002
+coors      11170.492524
+fully      11273.700747
+downtown   12282.654017
+home       12412.314614
+5          12510.719225
+3          13055.777912
+large      13196.214803
+modern     19092.314708
+high       19632.242715
+family     21560.221761
+spacious   22518.768666
+'TFIDF_Description_max100.pkl'
+
+
+title LASSO with TFIDF, max_features = 100
+R^2 =  0.154
+Alpha:  10.519
+
+historic   10650.243343
+modern     10792.298767
+3          11809.194195
+loft       11961.129650
+large      12391.220199
+oasis      12591.281021
+remodel    13360.262421
+deck       15890.755458
+rooftop    16228.289341
+luxury     20769.116204
+sleep      44856.285094
+
+
+title LASSO with TFIDF, max_features = 100
+R^2 =  0.271
+ Alpha:  5.206
+u'room_darkening_shades                1.457288e+04
+u'pocket_wifi                          1.597394e+04
+entrance                               1.654987e+04
+u'dishwasher                           1.795178e+04
+u'lockbox                              1.833780e+04
+u'smartlock                            2.128254e+04
+u'paid_parking                         2.132096e+04
+u'crib                                 2.173297e+04
+u'wide_hallway_clearance               2.335660e+04
+u'cable                                2.529066e+04
+u'keypad                               2.608653e+04
+u'pack_n_play_travel_crib              3.737685e+04
