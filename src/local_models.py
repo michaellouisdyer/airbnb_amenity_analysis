@@ -131,6 +131,7 @@ def best_amenities(amenities, my_property, comps):
     #     return revenue_potentials.sort_values(by = 'revenue_potential').drop(amenities)
     return revenue_potentials.sort_values(by = 'revenue_potential')
 
+
 import os
 id = '13574493'
 # id = '15398636'

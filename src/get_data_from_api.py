@@ -4,18 +4,21 @@ import numpy as np
 import pandas as pd
 import time
 class ReadAPI(object):
-    def __init__(self, token):
+    def __init__(self, token, verbose = False, num_comps = 20):
         self.token = token
+        self.verbose = verbose
+        self.num_comps = num_comps
 
     def get_single_property(self, property_id):
         time.sleep(0.2)
         r = requests.get('https://api.airdna.co/client/v1/market/property?access_token={}&property_id={}&show_amenities=True&show_images=False&show_location=True&currency=usd'.format(self.token, property_id))
-        # print(r.status_code)
         if r.status_code != 200:
+            if self.verbose:
+                print(f'HTTP code: {r.status_code}, retrying in 5s')
             time.sleep(5)
         return pd.Series(r.json()['property_details'])
 
-    def get_comps(self, info, num_comps = 80):
+    def get_comps(self, info):
         comp_df = pd.DataFrame()
         lat, long, beds, bath, acc = info
         i = 0
@@ -24,21 +27,20 @@ class ReadAPI(object):
         new_long = long
         step = 0.000
         weights = np.array([[1,1], [-1,-1], [1,-1], [-1,1]])
-        while num_rows < num_comps:
+        while num_rows < self.num_comps:
             i+=1
-            print(i)
             r= requests.get("https://api.airdna.co//client/v1/rentalizer/estimate?access_token={}&lat={}&lng={}&bedrooms={}&bathrooms={}&accommodates={}&show_amenities=True".format(self.token, new_lat, new_long, beds, bath, acc))
-            print(r.status_code)
-            print(r)
             time.sleep(0.1)
             if r.status_code != 200:
+                print(f'HTTP code: {r.status_code}, retrying in 5s')
                 time.sleep(5)
             comp_df = comp_df.append(pd.DataFrame.from_dict(r.json()['comps']))
             comp_df.drop_duplicates('airbnb_property_id', inplace = True)
             new_lat = lat+step *weights[i%4,0]
             new_long = long+step *weights[i%4,1]
             num_rows = comp_df.shape[0]
-            print(f'rows =  {num_rows}')
+            if self.verbose:
+                print(f'HTTP code: {r.status_code}, request #: {i}, # comps: {num_rows}')
             if i%4 == 0:
                 step += 0.07
             if i > 50:
