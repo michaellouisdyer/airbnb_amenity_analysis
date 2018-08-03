@@ -34,7 +34,7 @@ class PropertyAnalyzer(object):
         self.verbose = verbose
         self.distance_weight = distance_weight #Increase distance weight to find closer neighbors
         self.ReadAPI = ReadAPI(self.token, verbose=self.verbose, num_comps=num_comps)
-        self.get_comps() # get comps from AirDNA API
+        # self.get_comps() # get comps from AirDNA API
 
     def get_comps(self):
         """Uses the airDNA API to return comps, data for the current property and a list of amenities included in the dataframe
@@ -46,6 +46,11 @@ class PropertyAnalyzer(object):
         self.amenities = amenities.to_frame().reset_index()[0] # create df from list for consistency
         self.comps = comps.dropna(axis=1) # drop all null axes
         self.my_property = my_property[comps.columns] #Only select columns present in comps
+
+    def load_comps(self, comps, my_property, amenities):
+        self.comps = comps
+        self.my_property = my_property
+        self.amenities =  my_amenities
 
     def create_test_df(self, query_df, mat):
         """Split and scale df"""
