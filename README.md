@@ -50,7 +50,7 @@ There are a number of factors that affect these outcomes, as it is likely that p
 To determine the most important features for an area, I created a program that takes the URL of an Airbnb property, uses an algorithm to find comparable properties, and then uses KNeighbors Regression to predict revenue with and without a particular amenity based on information about those properties. The with-amenity prediction minus the without-amenity prediction is the revenue potential. I evaluated this for the most common amenities and put them in order of most potential.
 
 #### Example map for properties with and without breakfast in Denver
-<img src = "img/breakfast_map.png", width = 900>
+<img src = "img/breakfast_map.png" width = 900>
 
 
 
