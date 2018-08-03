@@ -38,11 +38,28 @@ class PropertyAnalyzer(object):
         self.comps = comps.dropna(axis=1) # drop all null axes
         self.my_property = my_property[comps.columns] #Only select columns present in comps
 
+    def create_test_df(self, query_df, mat):
+        """Split and scale df"""
+
+        scaler = StandardScaler()
+
+        y = mat.pop('rev_pot') #Pop target for properties with the amenity
+        X = mat.append(query_df) #add the query to the bottom so it can be scaled with the data
+        # Scale the feature matrices
+        X = scaler.fit_transform(X)
+
+        X[:, 3:] = X[:, 3:]*self.distance_weight
+        #Multiply latitude and longitude by distance_weight, increasing this makes tighter clusters
+        X[:, 3:] = X[:, 3:]*self.distance_weight
+        #Remove the query property and put it in its own dataframe
+        predict = X[-1].reshape(1, -1)
+        X = X[:-1, :]
+        return X, y, predict
+
     def cluster(self, amenity_x, scaling=True):
         """ Finds the revenue potential for an amenity
         returns rev_pot: float
         """
-        scaler = StandardScaler()
 
         #Datafame to find neighbors from, made from a 'query property'
         query_df = self.my_property[['bedrooms', 'bathrooms',
@@ -56,31 +73,10 @@ class PropertyAnalyzer(object):
         w_amenity = df[df[amenity_x].astype('bool')].drop(columns=[amenity_x])
         w_out_amenity = df[~df[amenity_x].astype('bool')].drop(columns=[amenity_x])
 
-        y_w = w_amenity.pop('rev_pot') #Pop target for properties with the amenity
-        w_amenity = w_amenity.append(query_df) #add the query to the bottom so it can be scaled with the data
+        #Split and scale df
+        X_w, y_w, w_predict = self.create_test_df(query_df, w_amenity)
 
-        #repeat for without dataframe
-        y_w_out = w_out_amenity.pop('rev_pot')
-        w_out_amenity = w_out_amenity.append(query_df)
-
-        if scaling:
-            # Scale the feature matrices
-            X_w = scaler.fit_transform(w_amenity)
-            X_w_out = scaler.fit_transform(w_out_amenity)
-        else:
-            X_w = np.array(w_amenity)
-            X_w_out = np.array(w_out_amenity)
-
-        #Multiply latitude and longitude by distance_weight, increasing this makes tighter clusters
-        X_w[:, 3:] = X_w[:, 3:]*self.distance_weight
-        #Remove the query property and put it in it's own dataframe
-        w_predict = X_w[-1].reshape(1, -1)
-        X_w = X_w[:-1, :]
-
-        #repeat
-        X_w_out[:, 3:] = X_w_out[:, 3:]*self.distance_weight
-        w_out_predict = X_w_out[-1].reshape(1, -1)
-        X_w_out = X_w_out[:-1, :]
+        X_w_out, y_w_out, w_out_predict = self.create_test_df(query_df, w_out_amenity)
 
         #Check to make sure dataframes have enough neighbors
         if (X_w_out.shape[0] < self.k) or (X_w.shape[0] < self.k):
@@ -109,6 +105,7 @@ class PropertyAnalyzer(object):
         return rev_pot
 
     def best_amenities(self):
+        """Iterates through amenities to find the revenue potentual for each"""
         revenue_potentials = pd.DataFrame(columns=['revenue_potential'])
         for amenity in self.amenities:
             rev_pot = self.cluster(amenity)
@@ -116,11 +113,11 @@ class PropertyAnalyzer(object):
         return revenue_potentials.sort_values(by='revenue_potential', ascending=False)
 
     def run_local_regression(self):
+        """Beta code to run regressions on returned data"""
         # self.get_comps()
         not_included_in_property = self.my_property.loc[self.my_property == 0].index
         y = self.comps.pop('rev_pot')
         # X = self.comps[not_included_in_property]
-        # import pdb; pdb.set_trace()
         X = self.comps.drop(columns=['latitude', 'longitude',  'cover_img', 'airbnb_property_id', 'cover_img', 'distance_meters',
                                      'listing_url', 'location', 'property_type', 'room_type', 'stats', 'title', 'amenities', 'extra_person_charge'], errors='ignore')
         X['constant'] = 1
