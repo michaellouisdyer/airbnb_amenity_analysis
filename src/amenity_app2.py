@@ -10,6 +10,9 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 import jsonpickle
 from utils import return_markdown
+
+
+
 prp = None
 app = dash.Dash()
 figure = ff.create_table(pd.DataFrame(columns=['Amenities', 'Coeff']))
