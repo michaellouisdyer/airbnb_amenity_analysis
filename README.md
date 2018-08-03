@@ -46,7 +46,10 @@ I found that some being family friendly, as well as having cable were slightly c
 There are a number of factors that affect these outcomes, as it is likely that properties that have certain amenities have different revenue potential because of underlying differences. In order to address this, I made a script to give personalized recommendations based on similar properties to a particular Airbnb.
 
 ## Clustering:
-To determine the most important features for an area, I created a script that takes the URL of an Airbnb property, uses an algorithm to find comparable properties, and then uses KNeighbors Regression to predict revenue with and without a particular amenity based on information about those properties. The with-amenity prediction minus the without-amenity prediction is the revenue potential. I evaluated this for the most common amenities and put them in order of most potential.
+To determine the most important features for an area, I created a program that takes the URL of an Airbnb property, uses an algorithm to find comparable properties, and then uses KNeighbors Regression to predict revenue with and without a particular amenity based on information about those properties. The with-amenity prediction minus the without-amenity prediction is the revenue potential. I evaluated this for the most common amenities and put them in order of most potential.
+
+To make the app, I first used the AirDNA API to access property information based on URL and return a list of comparable properties. Since the API only returns ten comps at a time, I created a function to 'walk' around the area and return more comps in a wider radius. I then ran another call to the API to get detailed amenity information for each of the comps. I then parsed the json and created a binary matrix of the features.  
+Then, for each amenity in the amenity matrix, I split the comps into two groups: one that has that amenity, and another that doesn't, and use KNeighbors regression to predict the revenue for each of those groups. The difference between the groups is the revenue potential for a particular amenity. I created a lightweight dashboard with Dash and Flask to display this information.
 
 
 

@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from tabulate import tabulate
 import numpy as np
 import pandas as pd
-
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 from fancyimpute import SimpleFill, KNN,  IterativeSVD, MatrixFactorization
 
 def to_markdown(df, round_places=3):
@@ -66,3 +66,13 @@ def determine_impute(df):
         print(str(i) + alg.__class__.__name__, alg_mse)
         MSE[str(i)+alg.__class__.__name__] = alg_mse
     return MSE
+
+def VIFS(df):
+    # vif_df = pd.DataFrame(orient = 'index')
+    vif_dict = {}
+    df =  df.select_dtypes(include = [np.number, 'bool'])#.dropna()
+    for i, col in enumerate(df.columns):
+        if df[col].dtype in['float64', 'int64', 'bool']:
+            vif_dict[col] = variance_inflation_factor(df.values.astype('int64'), i)
+            # print(col)
+    return pd.DataFrame.from_dict(vif_dict, orient='index').sort_values(by=0)
