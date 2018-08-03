@@ -14,6 +14,7 @@ from utils import return_markdown
 
 
 prp = None
+property_name  = '#### Results:'
 app = dash.Dash()
 figure = ff.create_table(pd.DataFrame(columns=['Amenities', 'Coeff']))
 figure1 = ff.create_table(pd.DataFrame(columns=['Words', 'Coeff']))
@@ -36,7 +37,7 @@ app.layout = html.Div(children=[
                   type='text', value='', autofocus=True, inputmode='url'),
         html.Button(id='submit-button', n_clicks=0, children='Submit'),
     ], style=dict(textAlign="center")),
-    html.Div([dcc.Markdown(id='loading_text')]),
+    html.Div([dcc.Markdown(id='loading_text')]),html.Div([dcc.Markdown(property_name, id='property_name')]),
     html.Div([dcc.Graph(id='amenity_table', figure=figure)], id='my_div', style=dict(textAlign="center", marginBottom="15px")),
     html.Div([dcc.Graph(id='nlp_table', figure=figure1)], id='my_div2', style=dict(textAlign="center", marginBottom="15px"))
 ])
@@ -76,6 +77,17 @@ def update_loading(n_clicks, figure):
         return ("## Analyzing the top amenities for your listing... ")
 
 @app.callback(
+    Output(component_id='property_name', component_property='children'),
+    [ Input('amenity_table', 'figure')]
+)
+def update_name(figure):
+    # if n_clicks == 0:
+    #     return("## Press submit to analyze!")
+    # if:
+    import pdb; pdb.set_trace()
+    return ("## " + prp.my_property['title'])
+
+@app.callback(
     Output('nlp_table', 'figure'),
     [ Input('amenity_table', 'figure')]
     )
@@ -86,6 +98,7 @@ def update_output(figure):
     coeffs['Coefficient'] = coeffs['Coefficient'].astype('float').round(1)
     table = ff.create_table(coeffs.sort_values(by='Coefficient', ascending =  False))
     return table
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
