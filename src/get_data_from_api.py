@@ -76,14 +76,3 @@ class ReadAPI(object):
             amenities.append(pd.get_dummies(comp_df['amenities'][i]).sum())
         amenity_matrix = pd.concat(amenities, axis = 1).T.fillna(0)
         return comp_df.join(amenity_matrix), amenity_matrix.columns
-
-
-# r.headers
-# r.json()['property_details']['amenities']
-# info = ( 39.716561,-104.996133, 2, 2, 4)
-
-# id = '6333040'
-# token = os.environ['AIRDNA_API_TOKEN']
-# ReadAPI = ReadAPI(token)
-# comps, my_property, amenities =  ReadAPI.get_comps_from_id(id)
-# import pdb; pdb.set_trace()

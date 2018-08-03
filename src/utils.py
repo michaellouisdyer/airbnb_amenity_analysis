@@ -10,6 +10,8 @@ def to_markdown(df, round_places=3):
     """Returns a markdown, rounded representation of a dataframe"""
     print(tabulate(df.round(round_places), headers='keys', tablefmt='pipe'))
 
+def return_markdown(df, round_places = 3):
+    return tabulate(df.round(round_places), headers='keys', tablefmt='pipe')
 
 class XyScaler(BaseEstimator, TransformerMixin):
     """Standardize a training set of data along with a vector of targets."""
