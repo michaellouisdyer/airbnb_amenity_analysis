@@ -10,6 +10,15 @@ import pandas as pd
 import numpy as np
 from utils import to_markdown
 import os
+import spacy
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.pipeline import Pipeline
+from sklearn.svm import LinearSVC
+from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords
+from string import punctuation
+from sklearn.linear_model import LassoCV, RidgeCV
+from spacy.lang.en import English
+parser = English()
 
 
 class PropertyAnalyzer(object):
@@ -147,13 +156,38 @@ class PropertyAnalyzer(object):
         print(f"Standard Linear R^2: train: {train_score: .3f}\n test: {test_score: .3f}")
         to_markdown(coefficients_df)
 
+    def spacy_tokenizer(self, doc):
+        tokens = parser(doc)
+        tokens = [tok.lemma_.lower().strip() if tok.lemma_ != "-PRON-" else tok.lower_ for tok in tokens]
+        tokens = [tok for tok in tokens if (tok not in stopwords and tok not in punctuation)]
+        return tokens
+
+    def do_NLP(self):
+        # comps = pd.read_pickle('cwtitle.pkl')
+        corpus = self.comps['title']
+        target =  self.comps['rev_pot']
+        vec =  TfidfVectorizer(tokenizer = self.spacy_tokenizer, max_features = None, max_df = 1.0, ngram_range = (1,1))
+        matrix = vec.fit_transform(corpus)
+
+        ls = RidgeCV()
+        print("fitting model")
+        ls.fit(matrix, target)
+        print("done")
+        coefficients_df = pd.DataFrame.from_dict(dict(zip(vec.get_feature_names(), ls.coef_)), orient='index').sort_values(by=0)
+        score = ls.score(matrix, target)
+        print(f"R^2 = {score: .3f} \n Alpha: {ls.alpha_ : .3f}")
+        most_common_words = np.array(vec.get_feature_names())[matrix.toarray().sum(axis=0).argsort()[::-1]]
+
+        return coefficients_df
+
 
 def main():
     # url = input("URL: ")
     url = "https://www.airbnb.com/rooms/13574493?location=Denver%2C%20CO%2C%20United%20States&s=EPFNH_so"
     prp = PropertyAnalyzer(url, verbose=True, num_comps=40)
+    prp.do_NLP()
     to_markdown(prp.best_amenities())
-    prp.run_local_regression()
+    # prp.run_local_regression()
 
 
 if __name__ == '__main__':

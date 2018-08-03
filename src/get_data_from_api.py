@@ -42,7 +42,7 @@ class ReadAPI(object):
             new_lat = lat+step * weights[i % 4, 0]
             new_long = long+step * weights[i % 4, 1]
             num_rows = comp_df.shape[0]
-            
+
             if self.verbose:
                 print(f'HTTP code: {r.status_code}, request #: {i}, # comps: {num_rows}')
             if i % 4 == 0:
@@ -60,18 +60,18 @@ class ReadAPI(object):
         info = prop[['latitude', 'longitude', 'bedrooms', 'bathrooms', 'accommodates']]
         info = tuple(*[*info.values])
         comp_df = self.get_comps(info)
-        comp_df = self.get_amenities(comp_df)
+        comp_df = self.get_extra_info(comp_df)
         comp_df = comp_df.append(prop, ignore_index=True)
         comp_df2, amenities = self.create_amenity_matrix(comp_df)
         id_int = int(property_id)
         return comp_df2.query('airbnb_property_id != @id_int'), comp_df2.query('airbnb_property_id == @id_int').iloc[-1], amenities
 
-    def amenity_single_property(self, property_id):
+    def extra_single_property(self, property_id):
         prop = self.get_single_property(property_id)
-        return prop['amenities']
+        return prop[['amenities','title']]
 
-    def get_amenities(self, comp_df):
-        comp_df['amenities'] = comp_df['airbnb_property_id'].apply(self.amenity_single_property)
+    def get_extra_info(self, comp_df):
+        comp_df[['amenities','title']] = comp_df['airbnb_property_id'].apply(self.extra_single_property)
         return comp_df
 
     def create_amenity_matrix(self, comp_df):
