@@ -60,7 +60,7 @@ def update_output_div(n_clicks, url):
     amenities = amenities[amenities['Revenue Potential ($)'] > 0]
     amenities.Amenity = amenities.Amenity.str.title().str.replace('_', ' ')
     amenities['Revenue Potential ($)'] = amenities['Revenue Potential ($)'].astype('float').round(1)
-    table = ff.create_table(amenities.head())
+    table = ff.create_table(amenities.head(10))
     return table
 
 @app.callback(
@@ -84,7 +84,7 @@ def update_output(figure):
     coeffs = coeffs.reset_index()
     coeffs.columns = ['Words', 'Coefficient']
     coeffs['Coefficient'] = coeffs['Coefficient'].astype('float').round(1)
-    table = ff.create_table(coeffs.sort_values(by='Coefficient'))
+    table = ff.create_table(coeffs.sort_values(by='Coefficient', ascending =  False))
     return table
 
 if __name__ == '__main__':

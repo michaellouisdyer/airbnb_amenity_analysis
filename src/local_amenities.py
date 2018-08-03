@@ -107,6 +107,9 @@ class PropertyAnalyzer(object):
 
         w_out_distance, w_out_neighbors = kn_w_out.kneighbors(w_out_predict)
         w_out_neighbors_df = w_out_amenity.iloc[w_out_neighbors.flatten()]
+        ## # TODO: manually check comps for neighbors / check weighting
+        # TODO: do comps iteratively
+        # TODO: change lat/long to distance
 
         # predict revenue for nearby properties with and without the amenity
         w_revenue = kn_w.predict(w_predict)[0]
@@ -173,7 +176,7 @@ class PropertyAnalyzer(object):
         # comps = pd.read_pickle('cwtitle.pkl')
         corpus = self.comps['title']
         target =  self.comps['rev_pot']
-        vec =  TfidfVectorizer(tokenizer = self.spacy_tokenizer, max_features = None, max_df = 1.0, ngram_range = (1,1))
+        vec =  TfidfVectorizer(tokenizer = self.spacy_tokenizer, max_features = 15, max_df = 1.0, ngram_range = (1,1))
         matrix = vec.fit_transform(corpus)
 
         ls = RidgeCV()
