@@ -25,8 +25,12 @@ class PropertyAnalyzer(object):
     """Finds amenity values for neighbors given an airbnb url"""
     def __init__(self, url, k_neighbors=6, verbose=False, distance_weight=1, num_comps=20):
         self.url = url
-        self.property_id = url[url.rfind('/')+1: url.rfind('?')] # quick isolation of ID
+        if url.find('?') == -1:
+            self.property_id = url[url.rfind('/')+1:]
+        else:
+            self.property_id = url[url.rfind('/')+1: url.rfind('?')] # quick isolation of ID
         self.token = os.environ['AIRDNA_API_TOKEN'] #API key
+        print(self.property_id)
         self.amenities = pd.DataFrame()
         self.comps = pd.DataFrame()
         self.my_property = pd.DataFrame()
