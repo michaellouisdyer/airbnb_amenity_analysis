@@ -58,13 +58,14 @@ To determine the most important features for an area, I created a program that t
 #### Making the app
 To make the app, I first used the AirDNA API to access property information based on URL and return a list of comparable properties. Since the API only returns ten comps at a time, I created a function to 'walk' around the area and return more comps in a wider radius. I then ran another call to the API to get detailed amenity information for each of the comps. I then parsed the json and created a binary matrix of the features.  
 Then, for each amenity in the amenity matrix, I split the comps into two groups: one that has that amenity, and another that doesn't, and use KNeighbors regression to predict the revenue for each of those groups. The difference between the groups is the revenue potential for a particular amenity. I created a lightweight dashboard with Dash and Flask to display this information.
+<img src = "img/app2.jpg">
 
-Example:
-<img src = 'img/app2.jpg' width = 800>
-
-#### Natural Language Processing
+#### Doing some NLP
 I also decided to explore the language of the Airbnb listings, using LASSO regression and NLP to predict potential revenue of a property based on a TF-IDF matrix of various listing text fields.
 Words with higher coefficients indicate that they are more commonly associated with rentals that have a higher value and vice versa for lower values. The app generates a list of the most important words in the area based on the title.
+
+ These models have low predictive value as they are meant to identify hidden trends.
+
 
 
 I also decided to explore the language of the Airbnb listings, using LASSO regression and NLP to predict potential revenue of a property based on a TF-IDF matrix of various listing text fields. These models have low predictive value as they are meant to identify hidden trends.
@@ -109,6 +110,10 @@ Alpha:  10.519
 
 
 #### Future Work:
-I'd like to investigate several different ways of calculating the distance. Many real estate companies, instead of using vector similarities, calculate similarities for each feature iteratively and then average the results.
+I'd like to verify the results of the amenity comparison to make sure that the distances are being calculated correctly. Many real estate companies, instead of calculating vector similarities, calculate similarities for each feature iteratively and then average the results.
 
-I'd also like to look at the body of the description as well as the reviews to determine underlying trends among high revenue properties.
+Working with linear regression on a property by property bases did not yield good results because of the curse of dimensionality. I need to dig in deeper to see how to improve their performance; possibly by getting more comps or limiting the feature subset to a very small number.
+
+I also find the NLP work very promising -- there is a lot of hidden data in the text of these places and I'd like to look at the body of the description as well as the reviews to determine underlying trends among high revenue properties.
+
+The goal is to create an API endpoint that seamlessly integrates with the upcoming AirDNA personalized dashboard.
