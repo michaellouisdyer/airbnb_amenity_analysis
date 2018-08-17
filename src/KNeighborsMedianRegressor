@@ -1,0 +1,4 @@
+"""Nearest Neighbor Median Regression"""
+# edited from SKlearn
+
+class Kn

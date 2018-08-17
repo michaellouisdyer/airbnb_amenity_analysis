@@ -3,7 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 import pandas as pd
-from local_amenities import PropertyAnalyzer
+from PropertyAnalyzer import PropertyAnalyzer
 from dash.dependencies import Input, Output, State
 import plotly.figure_factory as ff
 import plotly.plotly as py
@@ -64,7 +64,7 @@ def update_output_div(n_clicks, url):
     amenities['Revenue Potential ($)'] = amenities['Revenue Potential ($)'].astype('float').round(1)
     amenities_table = amenities.head(10)
 
-    coeffs = prp.do_NLP()
+    coeffs = prp.NLP()
     coeffs = coeffs.reset_index()
     coeffs.columns = ['Words', 'Coefficient']
     coeffs['Coefficient'] = coeffs['Coefficient'].astype('float').round(1)
