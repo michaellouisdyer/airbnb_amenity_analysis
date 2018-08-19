@@ -152,11 +152,9 @@ class PropertyAnalyzer(object):
 
 def main():
     """Analyzes a single property from a url"""
-    # url = input("URL: ")
-    url = 'https://www.airbnb.com/rooms/14143174?location=Breckenridge%2C%20CO%2C%20United%20States&adults=1&children=0&infants=0&s=nwtUEb3-'
+    url = input("URL: ")
     prp = PropertyAnalyzer(url, verbose=True, num_comps=40)
     prp.get_comps()
-    # prp.NLP()
 
     # Print formatted tables of results
     to_markdown(prp.best_amenities())
