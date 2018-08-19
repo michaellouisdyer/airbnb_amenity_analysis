@@ -12,7 +12,7 @@ I then looked at the distribution of various amenities for all of Denver:
  I then ran an elastic net regression on all of the properties in Denver to see if there were any overall trends.
 
 ElasticNet (l1_ratio = 1, alpha = 129.33)
-R**2 = 0.1331
+R^2 = 0.1331
 
 |  Amenity            |Coefficient|
 |:--------------------|----------:|
@@ -40,7 +40,7 @@ R**2 = 0.1331
 | cabletv             |  3624.64  |
 | family_friendly     |  3691.5   |
 
-I found that some being family friendly, as well as having cable were slightly correlated with higher revenue potential. Pools, pets, and breakfast were correlated with less. This does not indicate that the amenity causes a change in potential, only that higher revenue properties are more likely to have these things. Similarly, adding a pool would not decrease the value of a home; however, lower revenue homes were more likely to have a pool. This model, because it does not include important factors such as the number of beds and the location, has very little predictive power with an R**2 of 0.13.
+I found that some being family friendly, as well as having cable were slightly correlated with higher revenue potential. Pools, pets, and breakfast were correlated with less. This does not indicate that the amenity causes a change in potential, only that higher revenue properties are more likely to have these things. Similarly, adding a pool would not decrease the value of a home; however, lower revenue homes were more likely to have a pool. This model, because it does not include important factors such as the number of beds and the location, has very little predictive power with an R^2 of 0.13.
 
 
 
@@ -110,10 +110,5 @@ Alpha:  10.519
 
 
 #### Future Work:
-I'd like to verify the results of the amenity comparison to make sure that the distances are being calculated correctly. Many real estate companies, instead of calculating vector similarities, calculate similarities for each feature iteratively and then average the results.
-
-Working with linear regression on a property by property bases did not yield good results because of the curse of dimensionality. I need to dig in deeper to see how to improve their performance; possibly by getting more comps or limiting the feature subset to a very small number.
-
-I also find the NLP work very promising -- there is a lot of hidden data in the text of these places and I'd like to look at the body of the description as well as the reviews to determine underlying trends among high revenue properties.
-
-The goal is to create an API endpoint that seamlessly integrates with the upcoming AirDNA personalized dashboard.
+The predictive ability of the amenity features ended up being fairly low and thus not of as much utility as I originall expected. However,
+I find the NLP work very promising -- there is a lot of hidden data in the text of these places and I'd like to look at the body of the description as well as the reviews to determine underlying trends among high revenue properties.
