@@ -1,5 +1,5 @@
 ## Should I Buy a Hot Tub?
-#### An personalized neighborhood analysis for Airbnb owners, based on data from AirDNA
+#### A personalized neighborhood analysis for Airbnb owners, based on data from AirDNA
 
 ### Exploring the data
 The purpose of this project is to provide Airbnb owners with personalized recommendations for which amenities (from the Airbnb amenities list) can provide the most additional revenue for them. AirDNA analyzes many other valuable factors, but I wanted to see what impact amenities had revenue. My revenue measure was projected lifetime revenue, which is the total revenue that AirDNA predicts a property would have made since 2017 if it had been completely available (not blocked off by the owner) the whole time, accounting for booking rates and nightly rates.
